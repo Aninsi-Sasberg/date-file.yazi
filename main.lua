@@ -1,11 +1,11 @@
 --- @since 26.1.22
 
 local function info(content)
-	return ya.notify {
-		title = "Date",
-		content = content,
-		timeout = 2,
-	}
+  return ya.notify {
+    title = "Date",
+    content = content,
+    timeout = 2,
+  }
 end
 
 local function extension(default_value)
@@ -19,27 +19,36 @@ local function extension(default_value)
 end
 
 return {
-	entry = function(_, job)
-    date = os.date("%Y-%m-%d")
+  entry = function(_, job)
+    local filename = os.date("%Y-%m-%d")
+    local ext = ""
+    local event = 0
 
-    if job.args.ext == "" then
-      ext = ""
-    else
+    local dir = false
+    if job.args.dir == true then
+      dir = true
+    elseif not job.args.ext == "" then
       ext = job.args.ext
     end
 
-		local ext, event = extension(ext)
-		if not event == 1 then
-			return
-		end
+    if not dir then
+      ext, event = extension(ext)
+      if not event == 1 then
+        info("Couldn't read Extension.")
+        return
+      end
 
-    if string.sub(ext, 1, 1) ~= "." and ext ~= "" then
-      ext = "." .. ext
+      if string.sub(ext, 1, 1) ~= "." and ext ~= "" then
+        ext = "." .. ext
+      end
+
+      filename = filename .. ext
     end
 
-    filename = date .. ext
-
-    file = io.open(filename, "w")
-    file:close()
-	end,
+    local ok, err = fs.create("dir", Url(filename))
+    if err then
+      info(err)
+      return
+    end
+  end
 }
