@@ -5,7 +5,7 @@ Create a file with the current date and an extension.
 ## Installation
 
 ```sh
-ya pkg add Aninsi-Sasberg/date-file
+ya pkg add Aninsi-Sasberg/date
 ```
 
 ## Usage
@@ -14,9 +14,14 @@ Add this to your `~/.config/yazi/keymap.toml`:
 
 ```toml
 [[mgr.prepend_keymap]]
-on   = "A"
-run  = "plugin date-file -- --ext=.txt"
+on   = [ "A", "A" ]
+run  = "plugin date -- --ext=.txt"
 desc = "Create new file with current date and extension"
+
+[[mgr.prepend_keymap]]
+on   = [ "A", "D" ]
+run  = "plugin date -- --dir"
+desc = "Create new empty directory with current date"
 ```
 
 Note that, the keybindings above are just examples, please tune them up as needed to ensure they don't conflict with your other actions/plugins.
